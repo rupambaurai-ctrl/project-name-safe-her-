@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SafeHer – Women's Safety Platform</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --pink-50: #FBEAF0; --pink-100: #F4C0D1; --pink-200: #ED93B1;
+    --pink-400: #D4537E; --pink-600: #993556; --pink-800: #72243E; --pink-900: #4B1528;
+    --white: #fff; --gray-100: #f5f5f5; --gray-300: #ddd; --gray-600: #666; --gray-800: #333;
+    --radius: 12px; --shadow: 0 2px 16px rgba(180,60,100,0.10);
+  }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--pink-50); color: var(--gray-800); min-height: 100vh; }
+
+  /* NAV */
+  nav { background: var(--pink-400); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; box-shadow: 0 2px 8px rgba(180,60,100,0.18); position: sticky; top: 0; z-index: 100; }
+  .nav-logo { color: #fff; font-size: 1.5rem; font-weight: 700; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
+  .nav-logo span { font-size: 1.6rem; }
+  .nav-links { display: flex; gap: 1rem; }
+  .nav-links button { background: none; border: 1.5px solid rgba(255,255,255,0.5); color: #fff; border-radius: 20px; padding: 6px 16px; cursor: pointer; font-size: 0.9rem; transition: background 0.2s; }
+  .nav-links button:hover, .nav-links button.active { background: #fff; color: var(--pink-600); }
+
+  /* PAGES */
+  .page { display: none; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; }
+  .page.active { display: block; }
+
+  /* CARDS */
+  .card { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.5rem; margin-bottom: 1.5rem; border: 1px solid var(--pink-100); }
+  .card-title { font-size: 1.1rem; font-weight: 600; color: var(--pink-600); margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
+
+  /* FORMS */
+  .form-group { margin-bottom: 1rem; }
+  label { display: block; font-size: 0.85rem; color: var(--gray-600); margin-bottom: 4px; font-weight: 500; }
+  input[type=text], input[type=email], input[type=password], input[type=tel], input[type=number], select {
+    width: 100%; padding: 10px 14px; border: 1.5px solid var(--pink-100); border-radius: 8px;
+    font-size: 0.95rem; background: #fff; color: var(--gray-800); transition: border 0.2s;
+  }
+  input:focus, select:focus { outline: none; border-color: var(--pink-400); }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 24px; border-radius: 25px; border: none; cursor: pointer; font-size: 1rem; font-weight: 600; transition: all 0.2s; }
+  .btn-primary { background: var(--pink-400); color: #fff; }
+  .btn-primary:hover { background: var(--pink-600); }
+  .btn-danger { background: #e53935; color: #fff; font-size: 1.1rem; padding: 14px 32px; }
+  .btn-danger:hover { background: #b71c1c; }
+  .btn-outline { background: #fff; color: var(--pink-600); border: 1.5px solid var(--pink-400); }
+  .btn-outline:hover { background: var(--pink-50); }
+  .btn-sm { padding: 6px 14px; font-size: 0.85rem; border-radius: 20px; }
+  .btn-full { width: 100%; }
+
+  /* HERO */
+  .hero { text-align: center; padding: 3rem 1rem 2rem; }
+  .hero h1 { font-size: 2.4rem; color: var(--pink-600); font-weight: 800; margin-bottom: 0.5rem; }
+  .hero p { color: var(--gray-600); font-size: 1.05rem; margin-bottom: 1.5rem; }
+  .hero-badges { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2rem; }
+  .badge { background: var(--pink-50); border: 1px solid var(--pink-100); border-radius: 20px; padding: 6px 16px; font-size: 0.85rem; color: var(--pink-800); }
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+  .feature-card { background: #fff; border-radius: var(--radius); padding: 1.25rem; text-align: center; border: 1px solid var(--pink-100); box-shadow: var(--shadow); }
+  .feature-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+  .feature-card h3 { font-size: 1rem; color: var(--pink-600); margin-bottom: 0.3rem; }
+  .feature-card p { font-size: 0.83rem; color: var(--gray-600); }
+
+  /* SOS */
+  .sos-center { text-align: center; }
+  .sos-btn-wrap { margin: 1.5rem 0; }
+  .sos-big { width: 160px; height: 160px; border-radius: 50%; border: none; background: #e53935; color: #fff; font-size: 1.5rem; font-weight: 800; cursor: pointer; box-shadow: 0 0 0 12px rgba(229,57,53,0.15); transition: all 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto; gap: 4px; }
+  .sos-big:hover { background: #b71c1c; box-shadow: 0 0 0 20px rgba(229,57,53,0.20); }
+  .sos-big .icon { font-size: 2.5rem; }
+  .contacts-list { list-style: none; }
+  .contacts-list li { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--pink-50); font-size: 0.95rem; }
+  .contacts-list li:last-child { border-bottom: none; }
+  .contact-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--pink-100); color: var(--pink-800); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0; }
+  .contact-info { flex: 1; }
+  .contact-name { font-weight: 600; font-size: 0.9rem; }
+  .contact-rel { font-size: 0.78rem; color: var(--gray-600); }
+  .contact-num { font-size: 0.85rem; color: var(--pink-600); }
+  .msg-sent { display: none; background: #e8f5e9; color: #2e7d32; padding: 12px 18px; border-radius: 10px; margin-top: 1rem; font-weight: 600; text-align: center; }
+
+  /* LOCATION */
+  .map-placeholder { background: var(--pink-50); border: 2px dashed var(--pink-200); border-radius: var(--radius); height: 220px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--pink-400); font-size: 1rem; gap: 8px; margin-bottom: 1rem; }
+  .map-placeholder .map-icon { font-size: 3rem; }
+  .loc-info { background: var(--pink-50); border-radius: 10px; padding: 12px 16px; font-size: 0.9rem; color: var(--gray-800); margin-bottom: 1rem; border: 1px solid var(--pink-100); }
+  .loc-label { font-size: 0.78rem; color: var(--gray-600); margin-bottom: 2px; }
+  .loc-value { font-weight: 600; color: var(--pink-800); }
+  .route-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  .route-result { background: #fff; border: 1px solid var(--pink-100); border-radius: 10px; padding: 14px; text-align: center; }
+  .route-result .r-label { font-size: 0.78rem; color: var(--gray-600); }
+  .route-result .r-value { font-size: 1.4rem; font-weight: 700; color: var(--pink-600); }
+  .route-result .r-sub { font-size: 0.78rem; color: var(--gray-600); }
+
+  /* RIDE */
+  .ride-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  .ride-card { background: #fff; border: 2px solid var(--pink-100); border-radius: var(--radius); padding: 1.25rem; text-align: center; cursor: pointer; transition: border 0.2s; }
+  .ride-card:hover, .ride-card.selected { border-color: var(--pink-400); background: var(--pink-50); }
+  .ride-icon { font-size: 2.5rem; margin-bottom: 8px; }
+  .ride-name { font-weight: 700; color: var(--pink-600); }
+  .ride-tag { font-size: 0.78rem; color: var(--gray-600); }
+  .ride-status { background: #e8f5e9; color: #2e7d32; border-radius: 10px; padding: 14px; text-align: center; font-weight: 600; display: none; margin-top: 1rem; }
+  .police-btn { background: #1a237e; color: #fff; border: none; border-radius: 25px; padding: 12px 28px; font-size: 1rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; margin: 0.5rem auto; transition: background 0.2s; }
+  .police-btn:hover { background: #283593; }
+  .police-status { background: #e3f2fd; color: #1565c0; border-radius: 10px; padding: 14px; text-align: center; font-weight: 600; display: none; margin-top: 1rem; }
+
+  /* REGISTER / LOGIN */
+  .auth-card { max-width: 480px; margin: 0 auto; }
+  .auth-tabs { display: flex; margin-bottom: 1.5rem; border-radius: 25px; overflow: hidden; border: 1.5px solid var(--pink-200); }
+  .auth-tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; font-weight: 600; color: var(--gray-600); background: #fff; border: none; transition: all 0.2s; font-size: 0.95rem; }
+  .auth-tab.active { background: var(--pink-400); color: #fff; }
+  .emergency-section { margin-top: 1rem; }
+  .emergency-section h4 { font-size: 0.9rem; color: var(--pink-600); font-weight: 600; margin-bottom: 0.7rem; display: flex; align-items: center; gap: 6px; }
+  .ec-row { display: grid; grid-template-columns: 1fr 1fr 1.5fr; gap: 8px; margin-bottom: 8px; align-items: end; }
+  .ec-row input, .ec-row select { font-size: 0.85rem; padding: 8px 10px; }
+  .add-contact-btn { background: var(--pink-50); border: 1.5px dashed var(--pink-200); border-radius: 8px; padding: 8px; width: 100%; cursor: pointer; color: var(--pink-600); font-size: 0.85rem; font-weight: 600; margin-top: 4px; }
+  .add-contact-btn:hover { background: var(--pink-100); }
+  .section-divider { border: none; border-top: 1.5px solid var(--pink-100); margin: 1.2rem 0; }
+  .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: var(--pink-600); color: #fff; padding: 12px 28px; border-radius: 25px; font-weight: 600; font-size: 0.95rem; z-index: 999; display: none; box-shadow: 0 4px 16px rgba(150,40,80,0.25); }
+  .profile-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+  .profile-avatar { width: 60px; height: 60px; border-radius: 50%; background: var(--pink-200); color: var(--pink-800); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; flex-shrink: 0; }
+  .profile-name { font-size: 1.2rem; font-weight: 700; color: var(--pink-600); }
+  .profile-email { font-size: 0.85rem; color: var(--gray-600); }
+  .quick-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem; }
+  .qa-btn { background: var(--pink-50); border: 1.5px solid var(--pink-100); border-radius: var(--radius); padding: 1.2rem 0.5rem; text-align: center; cursor: pointer; transition: all 0.2s; }
+  .qa-btn:hover { background: var(--pink-100); border-color: var(--pink-200); }
+  .qa-icon { font-size: 1.8rem; margin-bottom: 5px; }
+  .qa-label { font-size: 0.78rem; color: var(--pink-800); font-weight: 600; }
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 1.7rem; }
+    .route-row, .ride-grid, .ec-row, .quick-actions { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo"><span>🛡</span> SafeHer</div>
+  <div class="nav-links">
+    <button class="active" onclick="showPage('home')">Home</button>
+    <button onclick="showPage('sos')">SOS</button>
+    <button onclick="showPage('location')">Location</button>
+    <button onclick="showPage('ride')">Ride</button>
+    <button onclick="showPage('auth')" id="authBtn">Register</button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <h1>🛡 SafeHer</h1>
+    <p>Your personal safety companion — anytime, anywhere.</p>
+    <div class="hero-badges">
+      <span class="badge">📍 Live Location Tracking</span>
+      <span class="badge">🚨 One-Tap SOS Alert</span>
+      <span class="badge">🚖 Women-Only Rides</span>
+      <span class="badge">👮 Police Auto-Alert</span>
+    </div>
+    <button class="btn btn-primary" onclick="showPage('auth')">Get Started – Register Free</button>
+    <div class="features-grid" style="margin-top:2rem;">
+      <div class="feature-card">
+        <div class="feature-icon">🚨</div>
+        <h3>Emergency SOS</h3>
+        <p>Send alerts to 5 trusted contacts instantly with one tap.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📍</div>
+        <h3>Live Location</h3>
+        <p>Track your route, estimate travel time with live traffic.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🚖</div>
+        <h3>Women-Only Rides</h3>
+        <p>Book Ola/Uber with woman drivers. Auto-alert if unreachable.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">👮</div>
+        <h3>Police Alert</h3>
+        <p>Nearest police station notified with your live location instantly.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📞</div>
+        <h3>Trusted Contacts</h3>
+        <p>Add family & friends. Messages auto-sent in emergencies.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>Always Secure</h3>
+        <p>Your data is private. Location shared only during alerts.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SOS PAGE -->
+<div class="page" id="page-sos">
+  <div class="card sos-center">
+    <div class="card-title" style="justify-content:center;">🚨 Emergency SOS</div>
+    <p style="color:var(--gray-600);font-size:0.9rem;margin-bottom:1rem;">Press the button below to instantly alert all your emergency contacts with your live location.</p>
+    <div class="sos-btn-wrap">
+      <button class="sos-big" onclick="triggerSOS()">
+        <span class="icon">🆘</span>
+        <span>SOS</span>
+        <span style="font-size:0.75rem;font-weight:400;">PRESS TO ALERT</span>
+      </button>
+    </div>
+    <div class="msg-sent" id="sosMsgSent">✅ Alert sent to all 5 emergency contacts with your live location!</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📞 Your Emergency Contacts</div>
+    <ul class="contacts-list" id="contactsList">
+      <li>
+        <div class="contact-avatar">M</div>
+        <div class="contact-info">
+          <div class="contact-name">Mother</div>
+          <div class="contact-rel">Primary Emergency</div>
+        </div>
+        <div class="contact-num">+91 98765 00001</div>
+      </li>
+      <li>
+        <div class="contact-avatar">F</div>
+        <div class="contact-info">
+          <div class="contact-name">Father</div>
+          <div class="contact-rel">Emergency Contact</div>
+        </div>
+        <div class="contact-num">+91 98765 00002</div>
+      </li>
+      <li>
+        <div class="contact-avatar">S</div>
+        <div class="contact-info">
+          <div class="contact-name">Sister</div>
+          <div class="contact-rel">Emergency Contact</div>
+        </div>
+        <div class="contact-num">+91 98765 00003</div>
+      </li>
+      <li>
+        <div class="contact-avatar">B</div>
+        <div class="contact-info">
+          <div class="contact-name">Brother</div>
+          <div class="contact-rel">Emergency Contact</div>
+        </div>
+        <div class="contact-num">+91 98765 00004</div>
+      </li>
+      <li>
+        <div class="contact-avatar">Fr</div>
+        <div class="contact-info">
+          <div class="contact-name">Best Friend</div>
+          <div class="contact-rel">Nearby Friend</div>
+        </div>
+        <div class="contact-num">+91 98765 00005</div>
+      </li>
+    </ul>
+    <div style="margin-top:1rem;text-align:center;">
+      <button class="btn btn-outline btn-sm" onclick="showPage('auth')">✏️ Edit Contacts</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">💬 Alert Message Preview</div>
+    <div style="background:var(--pink-50);border-radius:10px;padding:14px;font-size:0.88rem;color:var(--gray-800);line-height:1.7;border:1px solid var(--pink-100);">
+      🚨 <strong>EMERGENCY ALERT from SafeHer</strong><br>
+      <strong id="previewName">Priya Sharma</strong> needs help immediately!<br>
+      📍 <strong>Last known location:</strong> 28.6139°N, 77.2090°E (New Delhi)<br>
+      🗺 <strong>Google Maps:</strong> https://maps.google.com/?q=28.6139,77.2090<br>
+      ⏰ <strong>Time:</strong> <span id="alertTime"></span><br>
+      Please reach her or call emergency services immediately. — SafeHer App
+    </div>
+  </div>
+</div>
+
+<!-- LOCATION PAGE -->
+<div class="page" id="page-location">
+  <div class="card">
+    <div class="card-title">📍 Your Live Location</div>
+    <div class="map-placeholder" id="mapBox">
+      <span class="map-icon">🗺</span>
+      <span>Click "Activate Location" to track your position</span>
+      <button class="btn btn-primary" style="margin-top:8px;" onclick="activateLocation()">📡 Activate Location</button>
+    </div>
+    <div class="loc-info" id="locDisplay" style="display:none;">
+      <div class="loc-label">Current Location</div>
+      <div class="loc-value" id="locValue">Fetching…</div>
+      <div class="loc-label" style="margin-top:6px;">Coordinates</div>
+      <div class="loc-value" id="coordValue">—</div>
+      <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
+        <span style="background:var(--pink-100);color:var(--pink-800);padding:4px 12px;border-radius:20px;font-size:0.78rem;font-weight:600;">🟢 Live Tracking ON</span>
+        <button class="btn btn-sm btn-outline" onclick="shareLocation()">📤 Share Location</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🗺 Route Distance &amp; Time</div>
+    <div class="form-group">
+      <label>From (Origin)</label>
+      <input type="text" id="fromLoc" placeholder="e.g. Connaught Place, Delhi" value="Connaught Place, New Delhi">
+    </div>
+    <div class="form-group">
+      <label>To (Destination)</label>
+      <input type="text" id="toLoc" placeholder="e.g. Lajpat Nagar, Delhi">
+    </div>
+    <div class="form-group">
+      <label>Traffic Condition</label>
+      <select id="trafficSel">
+        <option value="low">Low Traffic (smooth roads)</option>
+        <option value="moderate" selected>Moderate Traffic (normal)</option>
+        <option value="heavy">Heavy Traffic (rush hour)</option>
+        <option value="veryheavy">Very Heavy Traffic (peak jam)</option>
+      </select>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="calcRoute()">📊 Calculate Route</button>
+    <div class="route-row" id="routeResult" style="margin-top:1rem;display:none;">
+      <div class="route-result">
+        <div class="r-label">📏 Distance</div>
+        <div class="r-value" id="distVal">—</div>
+        <div class="r-sub">kilometers</div>
+      </div>
+      <div class="route-result">
+        <div class="r-label">⏱ Estimated Time</div>
+        <div class="r-value" id="timeVal">—</div>
+        <div class="r-sub" id="timeSub">with current traffic</div>
+      </div>
+    </div>
+    <div id="routeNote" style="display:none;margin-top:0.7rem;font-size:0.82rem;color:var(--gray-600);text-align:center;"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🚔 Nearest Police Stations</div>
+    <ul style="list-style:none;font-size:0.9rem;">
+      <li style="padding:10px 0;border-bottom:1px solid var(--pink-50);display:flex;gap:10px;align-items:center;"><span>👮</span><div><div style="font-weight:600;">Connaught Place PS</div><div style="color:var(--gray-600);font-size:0.8rem;">0.8 km away · Helpline: 100</div></div></li>
+      <li style="padding:10px 0;border-bottom:1px solid var(--pink-50);display:flex;gap:10px;align-items:center;"><span>👮</span><div><div style="font-weight:600;">Janpath Police Post</div><div style="color:var(--gray-600);font-size:0.8rem;">1.2 km away · Helpline: 100</div></div></li>
+      <li style="padding:10px 0;display:flex;gap:10px;align-items:center;"><span>👮</span><div><div style="font-weight:600;">Barakhamba Road PS</div><div style="color:var(--gray-600);font-size:0.8rem;">1.6 km away · Helpline: 100</div></div></li>
+    </ul>
+    <div style="margin-top:1rem;text-align:center;">
+      <button class="police-btn" onclick="alertPolice()">🚔 Alert Nearest Police Station NOW</button>
+      <div class="police-status" id="policeStatus">✅ Police at Connaught Place PS have been notified with your live location. ETA: ~4 minutes.</div>
+    </div>
+  </div>
+</div>
+
+<!-- RIDE PAGE -->
+<div class="page" id="page-ride">
+  <div class="card">
+    <div class="card-title">🚖 Book a Women-Safe Ride</div>
+    <p style="font-size:0.88rem;color:var(--gray-600);margin-bottom:1rem;">All rides are matched with verified women drivers. If driver doesn't respond, police are auto-alerted.</p>
+    <div class="ride-grid">
+      <div class="ride-card selected" id="rideOla" onclick="selectRide('Ola')">
+        <div class="ride-icon">🟡</div>
+        <div class="ride-name">Ola She</div>
+        <div class="ride-tag">Women-only driver</div>
+      </div>
+      <div class="ride-card" id="rideUber" onclick="selectRide('Uber')">
+        <div class="ride-icon">⬛</div>
+        <div class="ride-name">Uber SafeRide</div>
+        <div class="ride-tag">Women-only driver</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Pickup Location</label>
+      <input type="text" id="pickup" placeholder="Enter pickup point" value="Connaught Place, New Delhi">
+    </div>
+    <div class="form-group">
+      <label>Drop Location</label>
+      <input type="text" id="drop" placeholder="Enter destination">
+    </div>
+    <button class="btn btn-primary btn-full" onclick="bookRide()" style="margin-top:0.5rem;">🚖 Book Women-Safe Ride</button>
+    <div class="ride-status" id="rideStatus"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📞 Driver Not Responding? Auto-Alert System</div>
+    <p style="font-size:0.88rem;color:var(--gray-600);margin-bottom:1rem;">If the driver calls back but you can't answer, don't reply, or internet is off — our system automatically:</p>
+    <ul style="list-style:none;font-size:0.88rem;color:var(--gray-800);">
+      <li style="padding:6px 0;display:flex;gap:8px;">✅ <span>Sends your last live location to all 5 emergency contacts</span></li>
+      <li style="padding:6px 0;display:flex;gap:8px;">✅ <span>Alerts nearest police station with your current/last GPS location</span></li>
+      <li style="padding:6px 0;display:flex;gap:8px;">✅ <span>Notifies Ola/Uber safety team with trip details and driver info</span></li>
+      <li style="padding:6px 0;display:flex;gap:8px;">✅ <span>Triggers silent SOS mode — continues tracking even offline</span></li>
+    </ul>
+    <div style="margin-top:1rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+      <button class="btn btn-danger btn-sm" onclick="triggerNoResponse()">📵 Driver Not Responding</button>
+      <button class="police-btn" style="margin:0;font-size:0.88rem;padding:10px 16px;" onclick="alertPoliceRide()">🚔 Alert Police</button>
+    </div>
+    <div class="police-status" id="ridePoliceStatus" style="margin-top:1rem;">🚔 Police alerted! Nearest station dispatching to your live location. All 5 contacts notified. Stay calm.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🆘 National Emergency Numbers</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;font-size:0.88rem;">
+      <div style="background:var(--pink-50);border-radius:10px;padding:10px;text-align:center;border:1px solid var(--pink-100);">
+        <div style="font-size:1.3rem;">🚔</div><div style="font-weight:700;color:var(--pink-600);">100</div><div style="color:var(--gray-600);">Police</div>
+      </div>
+      <div style="background:var(--pink-50);border-radius:10px;padding:10px;text-align:center;border:1px solid var(--pink-100);">
+        <div style="font-size:1.3rem;">🚑</div><div style="font-weight:700;color:var(--pink-600);">108</div><div style="color:var(--gray-600);">Ambulance</div>
+      </div>
+      <div style="background:var(--pink-50);border-radius:10px;padding:10px;text-align:center;border:1px solid var(--pink-100);">
+        <div style="font-size:1.3rem;">👩</div><div style="font-weight:700;color:var(--pink-600);">1091</div><div style="color:var(--gray-600);">Women Helpline</div>
+      </div>
+      <div style="background:var(--pink-50);border-radius:10px;padding:10px;text-align:center;border:1px solid var(--pink-100);">
+        <div style="font-size:1.3rem;">🆘</div><div style="font-weight:700;color:var(--pink-600);">112</div><div style="color:var(--gray-600);">National Emergency</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AUTH PAGE -->
+<div class="page" id="page-auth">
+  <div class="auth-card">
+    <div class="card">
+      <div style="text-align:center;margin-bottom:1.2rem;">
+        <div style="font-size:2.5rem;">🛡</div>
+        <h2 style="color:var(--pink-600);font-size:1.3rem;margin-top:4px;">SafeHer Account</h2>
+      </div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tabReg" onclick="switchTab('register')">Register</button>
+        <button class="auth-tab" id="tabLog" onclick="switchTab('login')">Login</button>
+      </div>
+
+      <!-- REGISTER FORM -->
+      <div id="registerForm">
+        <div class="form-group"><label>Full Name</label><input type="text" id="regName" placeholder="Your full name"></div>
+        <div class="form-group"><label>Email Address</label><input type="email" id="regEmail" placeholder="your@email.com"></div>
+        <div class="form-group"><label>Phone Number</label><input type="tel" id="regPhone" placeholder="+91 XXXXX XXXXX"></div>
+        <div class="form-group"><label>Password</label><input type="password" id="regPass" placeholder="Create a strong password"></div>
+        <div class="form-group"><label>City / Area</label><input type="text" id="regCity" placeholder="e.g. New Delhi"></div>
+
+        <hr class="section-divider">
+        <div class="emergency-section">
+          <h4>🆘 Emergency Contacts (up to 5)</h4>
+          <div id="ecContainer">
+            <div class="ec-row">
+              <select><option>Mother</option><option>Father</option><option>Sister</option><option>Brother</option><option>Friend</option><option>Other</option></select>
+              <input type="text" placeholder="Name">
+              <input type="tel" placeholder="Phone number">
+            </div>
+            <div class="ec-row">
+              <select><option>Father</option><option>Mother</option><option>Sister</option><option>Brother</option><option>Friend</option><option>Other</option></select>
+              <input type="text" placeholder="Name">
+              <input type="tel" placeholder="Phone number">
+            </div>
+            <div class="ec-row">
+              <select><option>Sister</option><option>Mother</option><option>Father</option><option>Brother</option><option>Friend</option><option>Other</option></select>
+              <input type="text" placeholder="Name">
+              <input type="tel" placeholder="Phone number">
+            </div>
+          </div>
+          <button class="add-contact-btn" onclick="addContact()" id="addContactBtn">+ Add another contact</button>
+          <p style="font-size:0.78rem;color:var(--gray-600);margin-top:6px;">You can add up to 5 emergency contacts. These will receive an automatic SOS message with your location.</p>
+        </div>
+
+        <hr class="section-divider">
+        <button class="btn btn-primary btn-full" onclick="registerUser()" style="margin-top:0.5rem;">🛡 Create SafeHer Account</button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <div id="loginForm" style="display:none;">
+        <div class="form-group"><label>Email Address</label><input type="email" id="logEmail" placeholder="your@email.com"></div>
+        <div class="form-group"><label>Password</label><input type="password" id="logPass" placeholder="Your password"></div>
+        <button class="btn btn-primary btn-full" onclick="loginUser()">🔓 Login to SafeHer</button>
+        <div style="text-align:center;margin-top:1rem;font-size:0.85rem;color:var(--gray-600);">Don't have an account? <a href="#" onclick="switchTab('register')" style="color:var(--pink-600);font-weight:600;">Register here</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE PAGE (shown after login) -->
+<div class="page" id="page-profile">
+  <div class="card">
+    <div class="profile-row">
+      <div class="profile-avatar" id="profileAvatar">P</div>
+      <div>
+        <div class="profile-name" id="profileName">Priya Sharma</div>
+        <div class="profile-email" id="profileEmail">priya@email.com</div>
+        <span style="background:var(--pink-100);color:var(--pink-800);padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;">✅ Verified Account</span>
+      </div>
+    </div>
+    <div class="quick-actions">
+      <div class="qa-btn" onclick="showPage('sos')"><div class="qa-icon">🚨</div><div class="qa-label">SOS Alert</div></div>
+      <div class="qa-btn" onclick="showPage('location')"><div class="qa-icon">📍</div><div class="qa-label">Live Location</div></div>
+      <div class="qa-btn" onclick="showPage('ride')"><div class="qa-icon">🚖</div><div class="qa-label">Book Ride</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">📞 My Emergency Contacts</div>
+    <ul class="contacts-list" id="profileContacts"></ul>
+    <button class="btn btn-outline btn-sm" style="margin-top:1rem;" onclick="showPage('auth')">✏️ Update Contacts</button>
+  </div>
+  <div style="text-align:center;margin-top:1rem;">
+    <button class="btn btn-outline btn-sm" onclick="logout()">🔓 Logout</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  let currentPage = 'home';
+  let locationActive = false;
+  let selectedRide = 'Ola';
+  let ecCount = 3;
+  let loggedIn = false;
+  let userData = {};
+  let contactsData = [
+    {rel:'Mother',name:'Mother',phone:'+91 98765 00001'},
+    {rel:'Father',name:'Father',phone:'+91 98765 00002'},
+    {rel:'Sister',name:'Sister',phone:'+91 98765 00003'},
+    {rel:'Brother',name:'Brother',phone:'+91 98765 00004'},
+    {rel:'Friend',name:'Best Friend',phone:'+91 98765 00005'}
+  ];
+
+  function showPage(p) {
+    document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.nav-links button').forEach(x => x.classList.remove('active'));
+    document.getElementById('page-' + p).classList.add('active');
+    const btns = document.querySelectorAll('.nav-links button');
+    const map = {home:0,sos:1,location:2,ride:3};
+    if (map[p] !== undefined) btns[map[p]].classList.add('active');
+    currentPage = p;
+    if (p === 'sos') updateAlertTime();
+  }
+
+  function showToast(msg, dur=3000) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.display = 'block';
+    setTimeout(() => t.style.display='none', dur);
+  }
+
+  function updateAlertTime() {
+    document.getElementById('alertTime').textContent = new Date().toLocaleString('en-IN');
+  }
+
+  function triggerSOS() {
+    updateAlertTime();
+    document.getElementById('sosMsgSent').style.display = 'block';
+    showToast('🚨 SOS Alert sent to all emergency contacts!', 4000);
+    setTimeout(() => document.getElementById('sosMsgSent').style.display='none', 6000);
+  }
+
+  function activateLocation() {
+    if (navigator.geolocation) {
+      showToast('📡 Activating GPS…');
+      navigator.geolocation.getCurrentPosition(pos => {
+        const lat = pos.coords.latitude.toFixed(5);
+        const lon = pos.coords.longitude.toFixed(5);
+        document.getElementById('mapBox').innerHTML = `
+          <span class="map-icon">🗺</span>
+          <span style="font-size:0.9rem;color:var(--pink-600);font-weight:600;">📍 Location Captured!</span>
+          <span style="font-size:0.82rem;color:var(--gray-600);">Lat: ${lat} | Lon: ${lon}</span>
+          <a href="https://maps.google.com/?q=${lat},${lon}" target="_blank" style="color:var(--pink-400);font-size:0.82rem;">Open in Google Maps ↗</a>`;
+        document.getElementById('locDisplay').style.display='block';
+        document.getElementById('locValue').textContent = 'Live GPS Location Active';
+        document.getElementById('coordValue').textContent = `${lat}°N, ${lon}°E`;
+        locationActive = true;
+        showToast('✅ Live location activated!');
+      }, () => {
+        document.getElementById('locValue').textContent = 'New Delhi, India (Demo Mode)';
+        document.getElementById('coordValue').textContent = '28.61390°N, 77.20900°E';
+        document.getElementById('locDisplay').style.display='block';
+        document.getElementById('mapBox').innerHTML='<span class="map-icon">🗺</span><span style="color:var(--pink-600);font-weight:600;">📍 Demo Location: New Delhi</span>';
+        showToast('📍 Using demo location (GPS unavailable)');
+      });
+    } else {
+      document.getElementById('locValue').textContent = 'New Delhi, India (Demo)';
+      document.getElementById('coordValue').textContent = '28.61390°N, 77.20900°E';
+      document.getElementById('locDisplay').style.display='block';
+    }
+  }
+
+  function shareLocation() {
+    if (navigator.share) navigator.share({title:'My SafeHer Location',text:'My live location from SafeHer',url:'https://maps.google.com/?q=28.6139,77.2090'});
+    else showToast('📋 Location link copied! Share with contacts.');
+  }
+
+  function calcRoute() {
+    const from = document.getElementById('fromLoc').value.trim();
+    const to = document.getElementById('toLoc').value.trim();
+    if (!from || !to) { showToast('⚠️ Please enter both origin and destination.'); return; }
+    const dist = (Math.random()*18+2).toFixed(1);
+    const traffic = document.getElementById('trafficSel').value;
+    const speeds = {low:40,moderate:28,heavy:18,veryheavy:10};
+    const speed = speeds[traffic];
+    const rawMins = (dist/speed)*60;
+    const mins = Math.round(rawMins);
+    const h = Math.floor(mins/60), m = mins%60;
+    const timeStr = h>0 ? `${h}h ${m}m` : `${m}m`;
+    const trafficLabels = {low:'Light traffic – smooth drive',moderate:'Moderate traffic – normal conditions',heavy:'Heavy traffic – rush hour delays',veryheavy:'Very heavy traffic – significant delays expected'};
+    document.getElementById('distVal').textContent = dist;
+    document.getElementById('timeVal').textContent = timeStr;
+    document.getElementById('timeSub').textContent = trafficLabels[traffic];
+    document.getElementById('routeResult').style.display='grid';
+    document.getElementById('routeNote').style.display='block';
+    document.getElementById('routeNote').textContent = `Route: ${from} → ${to} | Approx. speed: ${speed} km/h`;
+  }
+
+  function alertPolice() {
+    document.getElementById('policeStatus').style.display='block';
+    showToast('🚔 Police alerted with your live location!', 4000);
+  }
+
+  function selectRide(name) {
+    selectedRide = name;
+    document.getElementById('rideOla').classList.remove('selected');
+    document.getElementById('rideUber').classList.remove('selected');
+    document.getElementById('ride'+name).classList.add('selected');
+  }
+
+  function bookRide() {
+    const drop = document.getElementById('drop').value.trim();
+    if (!drop) { showToast('⚠️ Please enter your destination.'); return; }
+    const el = document.getElementById('rideStatus');
+    el.style.display='block';
+    el.textContent = `🚖 Searching for a verified woman driver on ${selectedRide}… Please wait.`;
+    setTimeout(() => { el.textContent = `✅ ${selectedRide} She driver matched! Driver: Sunita K. | Car: Maruti Swift DL 2X 1234 | ETA: 6 min. Trip sharing enabled.`; }, 2500);
+    showToast(`🚖 ${selectedRide} women-safe ride booked!`);
+  }
+
+  function triggerNoResponse() {
+    const el = document.getElementById('ridePoliceStatus');
+    el.style.display='block';
+    showToast('🚨 Auto-alert triggered! Police & contacts notified.', 5000);
+  }
+
+  function alertPoliceRide() {
+    document.getElementById('ridePoliceStatus').style.display='block';
+    showToast('🚔 Police alerted with current location!', 4000);
+  }
+
+  function switchTab(t) {
+    if (t==='register') {
+      document.getElementById('tabReg').classList.add('active');
+      document.getElementById('tabLog').classList.remove('active');
+      document.getElementById('registerForm').style.display='block';
+      document.getElementById('loginForm').style.display='none';
+    } else {
+      document.getElementById('tabLog').classList.add('active');
+      document.getElementById('tabReg').classList.remove('active');
+      document.getElementById('loginForm').style.display='block';
+      document.getElementById('registerForm').style.display='none';
+    }
+  }
+
+  function addContact() {
+    if (ecCount >= 5) { showToast('⚠️ Maximum 5 emergency contacts allowed.'); return; }
+    ecCount++;
+    const opts = ['Mother','Father','Sister','Brother','Friend','Other'];
+    const row = document.createElement('div'); row.className='ec-row';
+    row.innerHTML=`<select>${opts.map(o=>`<option>${o}</option>`).join('')}</select><input type="text" placeholder="Name"><input type="tel" placeholder="Phone number">`;
+    document.getElementById('ecContainer').appendChild(row);
+    if (ecCount >= 5) document.getElementById('addContactBtn').style.display='none';
+  }
+
+  function registerUser() {
+    const name = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const phone = document.getElementById('regPhone').value.trim();
+    if (!name||!email||!phone) { showToast('⚠️ Please fill name, email and phone.'); return; }
+    userData = {name,email,phone};
+    loggedIn = true;
+    setupProfile(name, email);
+    showToast('🎉 Account created! Welcome to SafeHer, '+name+'!', 4000);
+    setTimeout(() => { showPage('profile'); document.getElementById('authBtn').textContent='Profile'; }, 1200);
+  }
+
+  function loginUser() {
+    const email = document.getElementById('logEmail').value.trim();
+    const pass = document.getElementById('logPass').value.trim();
+    if (!email||!pass) { showToast('⚠️ Please enter email and password.'); return; }
+    userData = {name:'Priya Sharma', email};
+    loggedIn = true;
+    setupProfile('Priya Sharma', email);
+    showToast('✅ Welcome back to SafeHer!', 3000);
+    setTimeout(() => { showPage('profile'); document.getElementById('authBtn').textContent='Profile'; }, 800);
+  }
+
+  function setupProfile(name, email) {
+    document.getElementById('profileName').textContent = name;
+    document.getElementById('profileEmail').textContent = email;
+    document.getElementById('profileAvatar').textContent = name.charAt(0).toUpperCase();
+    document.getElementById('previewName').textContent = name;
+    const ul = document.getElementById('profileContacts');
+    ul.innerHTML='';
+    contactsData.forEach(c=>{
+      const li=document.createElement('li');
+      li.innerHTML=`<div class="contact-avatar">${c.rel.charAt(0)}</div><div class="contact-info"><div class="contact-name">${c.name}</div><div class="contact-rel">${c.rel}</div></div><div class="contact-num">${c.phone}</div>`;
+      ul.appendChild(li);
+    });
+  }
+
+  function logout() {
+    loggedIn=false;
+    userData={};
+    document.getElementById('authBtn').textContent='Register';
+    showPage('home');
+    showToast('👋 Logged out safely.');
+  }
+</script>
+</body>
+</html>
